@@ -10,11 +10,19 @@ const postSchema = mongoose.Schema({
     type: Number,
     default: 0,
   },
-  createAt: {
+  createdAt: {
     type: Date,
     default: new Date(),
   },
 });
+
+postSchema.set('toJSON', {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString()
+    delete returnedObject._id
+    delete returnedObject.__v
+  }
+})
 
 const Post = mongoose.model("Post", postSchema);
 

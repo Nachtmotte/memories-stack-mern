@@ -1,19 +1,31 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getPosts } from "../../redux/actions/posts";
+import React from "react";
+import Post from "./Post/Post";
+import { Grid, CircularProgress } from "@material-ui/core";
+import { useSelector } from "react-redux";
+
+import useStyles from "./styles";
 
 const Posts = () => {
-  const dispatch = useDispatch();
   const posts = useSelector((state) => state.posts);
+  const classes = useStyles();
 
-  useEffect(() => {
-    dispatch(getPosts());
-  }, [dispatch]);
+  console.log(posts);
 
-  return (
-    <div>
-      <h1>Posts: {posts.length}</h1>
-    </div>
+  return !posts.length ? (
+    <CircularProgress />
+  ) : (
+    <Grid
+      className={classes.mainContainer}
+      container
+      alignItems="stretch"
+      spacing={3}
+    >
+      {posts.map((post) => (
+        <Grid key={post.id} item xs={12} sm={6}>
+          <Post post={post}/>
+        </Grid>
+      ))}
+    </Grid>
   );
 };
 
