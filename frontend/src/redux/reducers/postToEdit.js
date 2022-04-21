@@ -2,9 +2,9 @@ const initialState = null;
 
 const reducer = (post = initialState, action) => {
   switch (action.type) {
-    case "SET_POST_EDIT":
+    case "@postToEdit/set":
       return action.payload;
-    case "CLEAR_POST_EDIT":
+    case "@postToEdit/clear":
       return initialState;
     default:
       return post;

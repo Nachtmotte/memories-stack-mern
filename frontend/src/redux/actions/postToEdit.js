@@ -1,13 +1,13 @@
 export const setPostToEdit = (post) => {
   return {
-    type: "SET_POST_EDIT",
+    type: "@postToEdit/set",
     payload: post,
   };
 };
 
 export const clearPostToEdit = () => {
   return {
-    type: "CLEAR_POST_EDIT",
+    type: "@postToEdit/clear",
     payload: null,
   };
 };

@@ -5,7 +5,7 @@ export const getPosts = () => {
     try {
       const { data } = await postsService.fetchPosts();
       dispatch({
-        type: "FETCH_ALL",
+        type: "@posts/getall",
         payload: data,
       });
     } catch (error) {
@@ -19,7 +19,7 @@ export const createPost = (post) => {
     try {
       const { data } = await postsService.createPost(post);
       dispatch({
-        type: "CREATE",
+        type: "@posts/create",
         payload: data,
       });
     } catch (error) {
@@ -33,7 +33,7 @@ export const updatePost = (id, post) => {
     try {
       const { data } = await postsService.updatePost(id, post);
       dispatch({
-        type: "UPDATE",
+        type: "@posts/update",
         payload: data,
       });
     } catch (error) {
@@ -41,3 +41,17 @@ export const updatePost = (id, post) => {
     }
   };
 };
+
+export const deletePost = (id) => {
+  return async (dispatch) => {
+    try{
+      await postsService.deletePost(id);
+      dispatch({
+        type: "@posts/delete",
+        payload: id,
+      });
+    }catch(error){
+      console.log(error);
+    }
+  }
+}

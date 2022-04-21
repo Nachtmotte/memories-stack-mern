@@ -39,6 +39,7 @@ const Form = () => {
       dispatch(createPost(postData));
     }
     clearForm();
+    e.target.reset();
   };
 
   const classes = useStyles();
@@ -107,12 +108,13 @@ const Form = () => {
           type="submit"
           fullWidth
         >
-          Submit
+          {!postToEdit ? "Send" : "Update"}
         </Button>
         <Button
           variant="contained"
           color="secondary"
           size="small"
+          type="reset"
           onClick={clearForm}
           fullWidth
         >

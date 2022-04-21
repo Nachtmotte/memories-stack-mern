@@ -2,14 +2,16 @@ const initialState = [];
 
 const reducer = (posts = initialState, action) => {
   switch (action.type) {
-    case "FETCH_ALL":
+    case "@posts/getall":
       return action.payload;
-    case "CREATE":
+    case "@posts/create":
       return [...posts, action.payload];
-    case "UPDATE":
+    case "@posts/update":
       return posts.map((post) =>
         post.id === action.payload.id ? action.payload : post
       );
+    case "@posts/delete":
+      return posts.filter((post) => post.id !== action.payload);
     default:
       return posts;
   }

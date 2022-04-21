@@ -17,6 +17,7 @@ import { useDispatch } from "react-redux";
 import { setPostToEdit } from "../../../redux/actions/postToEdit";
 
 import useStyles from "./styles";
+import { deletePost } from "../../../redux/actions/posts";
 
 const Post = ({ post }) => {
   const dispatch = useDispatch();
@@ -24,6 +25,10 @@ const Post = ({ post }) => {
 
   const handleEditPost = () => {
     dispatch(setPostToEdit(post));
+  };
+
+  const handleDeletePost = () => {
+    dispatch(deletePost(post.id));
   };
 
   return (
@@ -68,7 +73,7 @@ const Post = ({ post }) => {
           <ThumbUpAltIcon fontSize="small" />
           Like
         </Button>
-        <Button size="small" color="primary" onClick={() => {}}>
+        <Button size="small" color="primary" onClick={handleDeletePost}>
           <DeleteIcon fontSize="small" />
           Delete
         </Button>
