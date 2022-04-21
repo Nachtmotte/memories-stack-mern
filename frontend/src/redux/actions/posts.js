@@ -1,11 +1,17 @@
 import postsService from "../../services/posts";
+import {
+  GET_ALL,
+  CREATE,
+  UPDATE,
+  DELETE,
+} from "../../constants/postsActionTypes";
 
 export const getPosts = () => {
   return async (dispatch) => {
     try {
       const { data } = await postsService.fetchPosts();
       dispatch({
-        type: "@posts/getall",
+        type: GET_ALL,
         payload: data,
       });
     } catch (error) {
@@ -19,7 +25,7 @@ export const createPost = (post) => {
     try {
       const { data } = await postsService.createPost(post);
       dispatch({
-        type: "@posts/create",
+        type: CREATE,
         payload: data,
       });
     } catch (error) {
@@ -33,7 +39,7 @@ export const updatePost = (id, post) => {
     try {
       const { data } = await postsService.updatePost(id, post);
       dispatch({
-        type: "@posts/update",
+        type: UPDATE,
         payload: data,
       });
     } catch (error) {
@@ -44,14 +50,14 @@ export const updatePost = (id, post) => {
 
 export const deletePost = (id) => {
   return async (dispatch) => {
-    try{
+    try {
       await postsService.deletePost(id);
       dispatch({
-        type: "@posts/delete",
+        type: DELETE,
         payload: id,
       });
-    }catch(error){
+    } catch (error) {
       console.log(error);
     }
-  }
-}
+  };
+};

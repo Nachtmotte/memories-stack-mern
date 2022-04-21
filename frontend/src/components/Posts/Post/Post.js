@@ -17,7 +17,7 @@ import { useDispatch } from "react-redux";
 import { setPostToEdit } from "../../../redux/actions/postToEdit";
 
 import useStyles from "./styles";
-import { deletePost } from "../../../redux/actions/posts";
+import { deletePost, updatePost } from "../../../redux/actions/posts";
 
 const Post = ({ post }) => {
   const dispatch = useDispatch();
@@ -25,6 +25,10 @@ const Post = ({ post }) => {
 
   const handleEditPost = () => {
     dispatch(setPostToEdit(post));
+  };
+
+  const handleLikePost = () => {
+    dispatch(updatePost(post.id, { ...post, likeCount: post.likeCount + 1 }));
   };
 
   const handleDeletePost = () => {
@@ -63,15 +67,15 @@ const Post = ({ post }) => {
         {post.title}
       </Typography>
       <CardContent>
-        <Typography variant="h6" gutterBottom>
+        <Typography variant="body2" color="textSecondary" component="p" gutterBottom>
           {post.message}
         </Typography>
       </CardContent>
       <CardActions className={classes.cardActions}>
-        <Button size="small" color="primary" onClick={() => {}}>
-          {post.likeCount}
+        <Button size="small" color="primary" onClick={handleLikePost}>
           <ThumbUpAltIcon fontSize="small" />
-          Like
+          &nbsp; Like &nbsp;
+          {post.likeCount}
         </Button>
         <Button size="small" color="primary" onClick={handleDeletePost}>
           <DeleteIcon fontSize="small" />

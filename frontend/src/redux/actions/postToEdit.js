@@ -1,13 +1,15 @@
+import { SET, CLEAR } from "../../constants/postToEditActionTypes";
+
 export const setPostToEdit = (post) => {
   return {
-    type: "@postToEdit/set",
+    type: SET,
     payload: post,
   };
 };
 
 export const clearPostToEdit = () => {
   return {
-    type: "@postToEdit/clear",
+    type: CLEAR,
     payload: null,
   };
 };

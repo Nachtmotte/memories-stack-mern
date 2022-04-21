@@ -1,16 +1,22 @@
+import {
+  GET_ALL,
+  CREATE,
+  UPDATE,
+  DELETE,
+} from "../../constants/postsActionTypes";
 const initialState = [];
 
 const reducer = (posts = initialState, action) => {
   switch (action.type) {
-    case "@posts/getall":
+    case GET_ALL:
       return action.payload;
-    case "@posts/create":
+    case CREATE:
       return [...posts, action.payload];
-    case "@posts/update":
+    case UPDATE:
       return posts.map((post) =>
         post.id === action.payload.id ? action.payload : post
       );
-    case "@posts/delete":
+    case DELETE:
       return posts.filter((post) => post.id !== action.payload);
     default:
       return posts;
