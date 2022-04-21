@@ -9,7 +9,7 @@ export const getPosts = () => {
         payload: data,
       });
     } catch (error) {
-      console.log(error.message);
+      console.log(error);
     }
   };
 };
@@ -23,7 +23,21 @@ export const createPost = (post) => {
         payload: data,
       });
     } catch (error) {
-      console.log(error.message);
+      console.log(error);
+    }
+  };
+};
+
+export const updatePost = (id, post) => {
+  return async (dispatch) => {
+    try {
+      const { data } = await postsService.updatePost(id, post);
+      dispatch({
+        type: "UPDATE",
+        payload: data,
+      });
+    } catch (error) {
+      console.log(error);
     }
   };
 };

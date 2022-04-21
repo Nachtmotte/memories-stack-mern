@@ -9,13 +9,22 @@ import {
 } from "@material-ui/core";
 import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
 import DeleteIcon from "@material-ui/icons/Delete";
-import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
+//import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
+import EditIcon from "@material-ui/icons/Edit";
 import moment from "moment";
+import { useDispatch } from "react-redux";
+
+import { setPostToEdit } from "../../../redux/actions/postToEdit";
 
 import useStyles from "./styles";
 
 const Post = ({ post }) => {
+  const dispatch = useDispatch();
   const classes = useStyles();
+
+  const handleEditPost = () => {
+    dispatch(setPostToEdit(post));
+  };
 
   return (
     <Card className={classes.card}>
@@ -31,8 +40,13 @@ const Post = ({ post }) => {
         </Typography>
       </div>
       <div className={classes.overlay2}>
-        <Button style={{ color: "white" }} size="small" onClick={() => {}}>
-          <MoreHorizIcon fontSize="medium" />
+        <Button
+          style={{ color: "white" }}
+          size="small"
+          onClick={handleEditPost}
+        >
+          {/*<MoreHorizIcon fontSize="medium" />*/}
+          <EditIcon fontSize="small" />
         </Button>
       </div>
       <div className={classes.details}>
@@ -40,16 +54,19 @@ const Post = ({ post }) => {
           {post.tags.map((tag) => `#${tag} `)}
         </Typography>
       </div>
+      <Typography className={classes.title} variant="h5" gutterBottom>
+        {post.title}
+      </Typography>
       <CardContent>
-        <Typography className={classes.title} variant="h5" gutterBottom>
+        <Typography variant="h6" gutterBottom>
           {post.message}
         </Typography>
       </CardContent>
       <CardActions className={classes.cardActions}>
         <Button size="small" color="primary" onClick={() => {}}>
+          {post.likeCount}
           <ThumbUpAltIcon fontSize="small" />
           Like
-          {post.likeCount}
         </Button>
         <Button size="small" color="primary" onClick={() => {}}>
           <DeleteIcon fontSize="small" />

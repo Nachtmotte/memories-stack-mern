@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TextField, Button, Typography, Paper } from "@material-ui/core";
 import FileBase from "react-file-base64";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import useStyles from "./styles";
-import { createPost } from "../../redux/actions/posts";
+import { createPost, updatePost } from "../../redux/actions/posts";
+import { clearPostToEdit } from "../../redux/actions/postToEdit";
 
 const Form = () => {
+  const dispatch = useDispatch();
+
   const emptyPost = {
     creator: "",
     title: "",
@@ -15,18 +18,30 @@ const Form = () => {
     selectedFile: "",
   };
   const [postData, setPostData] = useState(emptyPost);
-  const classes = useStyles();
-  const dispatch = useDispatch();
+  const postToEdit = useSelector((state) => state.postToEdit);
 
-  const clear = () => {
+  useEffect(() => {
+    if (postToEdit) {
+      setPostData(postToEdit);
+    }
+  }, [postToEdit]);
+
+  const clearForm = () => {
     setPostData(emptyPost);
+    dispatch(clearPostToEdit());
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(createPost(postData));
-    clear();
+    if (postToEdit) {
+      dispatch(updatePost(postData.id, postData));
+    } else {
+      dispatch(createPost(postData));
+    }
+    clearForm();
   };
+
+  const classes = useStyles();
 
   return (
     <Paper className={classes.paper}>
@@ -36,7 +51,9 @@ const Form = () => {
         className={`${classes.root} ${classes.form}`}
         onSubmit={handleSubmit}
       >
-        <Typography variant="h6">Creating a Memory</Typography>
+        <Typography variant="h6">
+          {!postToEdit ? "Creating" : "Editing"} a Memory
+        </Typography>
         <TextField
           name="creator"
           variant="outlined"
@@ -96,7 +113,7 @@ const Form = () => {
           variant="contained"
           color="secondary"
           size="small"
-          onClick={clear}
+          onClick={clearForm}
           fullWidth
         >
           Clear
