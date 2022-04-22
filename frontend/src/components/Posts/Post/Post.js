@@ -7,28 +7,29 @@ import {
   Button,
   Typography,
 } from "@material-ui/core";
-import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
 import DeleteIcon from "@material-ui/icons/Delete";
 //import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import EditIcon from "@material-ui/icons/Edit";
 import moment from "moment";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { setPostToEdit } from "../../../redux/actions/postToEdit";
 
 import useStyles from "./styles";
-import { deletePost, updatePost } from "../../../redux/actions/posts";
+import { deletePost, likePost } from "../../../redux/actions/posts";
+import Likes from "./Likes";
 
 const Post = ({ post }) => {
   const dispatch = useDispatch();
   const classes = useStyles();
+  const user = useSelector((state) => state.auth.authData);
 
   const handleEditPost = () => {
     dispatch(setPostToEdit(post));
   };
 
   const handleLikePost = () => {
-    dispatch(updatePost(post.id, { ...post, likeCount: post.likeCount + 1 }));
+    dispatch(likePost(post.id));
   };
 
   const handleDeletePost = () => {
@@ -43,21 +44,24 @@ const Post = ({ post }) => {
         title={post.title}
       />
       <div className={classes.overlay}>
-        <Typography variant="h6">{post.creator}</Typography>
+        <Typography variant="h6">{post.username}</Typography>
         <Typography variant="body2">
           {moment(post.createdAt).fromNow()}
         </Typography>
       </div>
-      <div className={classes.overlay2}>
-        <Button
-          style={{ color: "white" }}
-          size="small"
-          onClick={handleEditPost}
-        >
-          {/*<MoreHorizIcon fontSize="medium" />*/}
-          <EditIcon fontSize="small" />
-        </Button>
-      </div>
+      {(user?.result?.googleId === post?.creatorId ||
+        user?.result?.id === post?.creatorId) && (
+        <div className={classes.overlay2}>
+          <Button
+            style={{ color: "white" }}
+            size="small"
+            onClick={handleEditPost}
+          >
+            {/*<MoreHorizIcon fontSize="medium" />*/}
+            <EditIcon fontSize="small" />
+          </Button>
+        </div>
+      )}
       <div className={classes.details}>
         <Typography variant="body1" color="textSecondary">
           {post.tags.map((tag) => `#${tag} `)}
@@ -67,20 +71,31 @@ const Post = ({ post }) => {
         {post.title}
       </Typography>
       <CardContent>
-        <Typography variant="body2" color="textSecondary" component="p" gutterBottom>
+        <Typography
+          variant="body2"
+          color="textSecondary"
+          component="p"
+          gutterBottom
+        >
           {post.message}
         </Typography>
       </CardContent>
       <CardActions className={classes.cardActions}>
-        <Button size="small" color="primary" onClick={handleLikePost}>
-          <ThumbUpAltIcon fontSize="small" />
-          &nbsp; Like &nbsp;
-          {post.likeCount}
+        <Button
+          size="small"
+          color="primary"
+          disabled={!user?.result}
+          onClick={handleLikePost}
+        >
+          <Likes post={post} />
         </Button>
-        <Button size="small" color="primary" onClick={handleDeletePost}>
-          <DeleteIcon fontSize="small" />
-          Delete
-        </Button>
+        {(user?.result?.googleId === post?.creatorId ||
+          user?.result?.id === post?.creatorId) && (
+          <Button size="small" color="primary" onClick={handleDeletePost}>
+            <DeleteIcon fontSize="small" />
+            Delete
+          </Button>
+        )}
       </CardActions>
     </Card>
   );

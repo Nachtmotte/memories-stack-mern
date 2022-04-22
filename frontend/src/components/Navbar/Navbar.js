@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { useNavigate, useLocation } from "react-router-dom";
-import { logout } from "../../redux/actions/auth";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { getSession, logout } from "../../redux/actions/auth";
 
 import useStyles from "./styles";
 import { AppBar, Button, Toolbar, Typography, Avatar } from "@material-ui/core";
@@ -12,21 +12,17 @@ import memories from "../../images/memories.png";
 function Navbar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
   const classes = useStyles();
 
-  const [user, setUser] = useState(
-    JSON.parse(sessionStorage.getItem("profile"))
-  );
+  const user = useSelector((state) => state.auth.authData);
 
   useEffect(() => {
-    setUser(JSON.parse(sessionStorage.getItem("profile")));
-  }, [location]);
+    dispatch(getSession());
+  }, [dispatch]);
 
   const handleLogout = () => {
     dispatch(logout());
     navigate("/");
-    setUser(null);
   };
 
   return (

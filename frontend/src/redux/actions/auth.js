@@ -1,4 +1,4 @@
-import { GOOGLE_SINGIN, LOGOUT, SINGIN } from "../../constants/authActionTypes";
+import { LOGOUT, SET_USER, SINGIN } from "../../constants/authActionTypes";
 import usersService from "../../services/users";
 
 export const signin = (credentials, navigate) => {
@@ -33,8 +33,16 @@ export const signup = (formData, navigate) => {
 
 export const googleLogin = (result, token) => {
   return {
-    type: GOOGLE_SINGIN,
+    type: SINGIN,
     payload: { result, token },
+  };
+};
+
+export const getSession = () => {
+  const user = JSON.parse(sessionStorage.getItem("profile"));
+  return {
+    type: SET_USER,
+    payload: user,
   };
 };
 

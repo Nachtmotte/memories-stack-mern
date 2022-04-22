@@ -9,9 +9,10 @@ import { clearPostToEdit } from "../../redux/actions/postToEdit";
 
 const Form = () => {
   const dispatch = useDispatch();
+  const classes = useStyles();
+  const user = useSelector((state) => state.auth.authData);
 
   const emptyPost = {
-    creator: "",
     title: "",
     message: "",
     tags: "",
@@ -36,13 +37,21 @@ const Form = () => {
     if (postToEdit) {
       dispatch(updatePost(postData.id, postData));
     } else {
-      dispatch(createPost(postData));
+      dispatch(createPost({ ...postData, username: user?.result?.name }));
     }
     clearForm();
     e.target.reset();
   };
 
-  const classes = useStyles();
+  if (!user?.result?.name) {
+    return (
+      <Paper className={classes.paper}>
+        <Typography variant="h6" align="center">
+          Please Sign In to create your own memories and like other's memories.
+        </Typography>
+      </Paper>
+    );
+  }
 
   return (
     <Paper className={classes.paper}>
@@ -55,16 +64,6 @@ const Form = () => {
         <Typography variant="h6">
           {!postToEdit ? "Creating" : "Editing"} a Memory
         </Typography>
-        <TextField
-          name="creator"
-          variant="outlined"
-          label="Creator"
-          fullWidth
-          value={postData.creator}
-          onChange={(e) =>
-            setPostData({ ...postData, creator: e.target.value })
-          }
-        />
         <TextField
           name="title"
           variant="outlined"
