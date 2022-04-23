@@ -37,6 +37,11 @@ export const updatePost = async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(_id))
     return res.status(404).send("There isn't POST with that id");
 
+  const postToUpdate = await Post.findById(_id);
+
+  if (req.userId !== postToUpdate.creatorId)
+    return res.status(401).send("Login to update this post");
+
   const updatedPost = await Post.findByIdAndUpdate(_id, post, { new: true });
 
   res.status(200).json(updatedPost);
@@ -48,9 +53,14 @@ export const deletePost = async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(_id))
     return res.status(404).send("There isn't POST with that id");
 
+  const postToDelete = await Post.findById(_id);
+
+  if (req.userId !== postToDelete.creatorId)
+    return res.status(401).send("Login to delete this post");
+
   await Post.findByIdAndDelete(_id);
 
-  res.status(200).json({ message: "POST deleted successfylly" });
+  res.status(200).json({ message: "POST deleted successfully" });
 };
 
 export const likePost = async (req, res) => {

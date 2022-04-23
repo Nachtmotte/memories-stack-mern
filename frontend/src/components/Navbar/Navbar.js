@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getSession, logout } from "../../redux/actions/auth";
+import decode from "jwt-decode";
 
 import useStyles from "./styles";
 import { AppBar, Button, Toolbar, Typography, Avatar } from "@material-ui/core";
@@ -12,6 +13,7 @@ import memories from "../../images/memories.png";
 function Navbar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const classes = useStyles();
 
   const user = useSelector((state) => state.auth.authData);
@@ -19,6 +21,16 @@ function Navbar() {
   useEffect(() => {
     dispatch(getSession());
   }, [dispatch]);
+
+  useEffect(() => {
+    const token = user?.token;
+    if (token) {
+      const decodedToken = decode(token);
+
+      if (decodedToken.exp * 1000 < new Date().getTime()) handleLogout();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location]);
 
   const handleLogout = () => {
     dispatch(logout());
