@@ -75,6 +75,7 @@ const Form = () => {
           fullWidth
           value={postData.title}
           onChange={(e) => setPostData({ ...postData, title: e.target.value })}
+          required
         />
         <TextField
           name="message"
@@ -87,6 +88,7 @@ const Form = () => {
           onChange={(e) =>
             setPostData({ ...postData, message: e.target.value })
           }
+          required
         />
         <InputChip
           chips={tags}

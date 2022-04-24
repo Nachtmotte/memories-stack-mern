@@ -5,3 +5,4 @@ export const UPDATE = "@posts/update";
 export const DELETE = "@posts/delete";
 export const START_LOADING = "@posts/startloading";
 export const END_LOADING = "@posts/endloading";
+export const GET_POST = "@posts/getpost";

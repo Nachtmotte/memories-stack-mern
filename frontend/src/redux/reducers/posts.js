@@ -6,12 +6,14 @@ import {
   GET_ALL_SEARCH,
   START_LOADING,
   END_LOADING,
+  GET_POST,
 } from "../../constants/postsActionTypes";
 const initialState = {
   posts: [],
   currentPage: 1,
   numberOfPages: 1,
   isLoading: false,
+  post: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -27,6 +29,8 @@ const reducer = (state = initialState, action) => {
         currentPage: action.payload.currentPage,
         numberOfPages: action.payload.numberOfPages,
       };
+    case GET_POST:
+      return { ...state, post: action.payload };
     case GET_ALL_SEARCH:
       return { ...state, posts: action.payload };
     case CREATE:

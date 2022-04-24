@@ -6,20 +6,21 @@ import {
   CardMedia,
   Button,
   Typography,
+  ButtonBase,
 } from "@material-ui/core";
-import DeleteIcon from "@material-ui/icons/Delete";
-//import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
-import EditIcon from "@material-ui/icons/Edit";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import { setPostToEdit } from "../../../redux/actions/postToEdit";
+import { deletePost, likePost } from "../../../redux/actions/posts";
 
 import useStyles from "./styles";
-import { deletePost, likePost } from "../../../redux/actions/posts";
 import Likes from "./Likes";
+import OptionsButton from "./OptionsButton";
 
 const Post = ({ post }) => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const classes = useStyles();
   const user = useSelector((state) => state.auth.authData);
@@ -36,50 +37,47 @@ const Post = ({ post }) => {
     dispatch(deletePost(post.id));
   };
 
+  const openPost = () => {
+    navigate(`/posts/${post.id}`);
+  };
+
   return (
     <Card className={classes.card} raised elevation={6}>
-      <CardMedia
-        className={classes.media}
-        image={post.selectedFile}
-        title={post.title}
-      />
-      <div className={classes.overlay}>
-        <Typography variant="h6">{post.username}</Typography>
-        <Typography variant="body2">
-          {moment(post.createdAt).fromNow()}
-        </Typography>
-      </div>
-      {(user?.result?.googleId === post?.creatorId ||
-        user?.result?.id === post?.creatorId) && (
-        <div className={classes.overlay2}>
-          <Button
-            style={{ color: "white" }}
-            size="small"
-            onClick={handleEditPost}
-          >
-            {/*<MoreHorizIcon fontSize="medium" />*/}
-            <EditIcon fontSize="small" />
-          </Button>
+      <ButtonBase
+        component="span"
+        className={classes.cardAction}
+        onClick={openPost}
+      >
+        <CardMedia
+          className={classes.media}
+          image={post.selectedFile}
+          title={post.title}
+        />
+        <div className={classes.overlay}>
+          <Typography variant="h6">{post.username}</Typography>
+          <Typography variant="body2">
+            {moment(post.createdAt).fromNow()}
+          </Typography>
         </div>
-      )}
-      <div className={classes.details}>
-        <Typography variant="body1" color="textSecondary">
-          {post.tags.map((tag) => `#${tag} `)}
+        <div className={classes.details}>
+          <Typography variant="body1" color="textSecondary">
+            {post.tags.map((tag) => `#${tag} `)}
+          </Typography>
+        </div>
+        <Typography className={classes.title} variant="h5" gutterBottom>
+          {post.title}
         </Typography>
-      </div>
-      <Typography className={classes.title} variant="h5" gutterBottom>
-        {post.title}
-      </Typography>
-      <CardContent>
-        <Typography
-          variant="body2"
-          color="textSecondary"
-          component="p"
-          gutterBottom
-        >
-          {post.message}
-        </Typography>
-      </CardContent>
+        <CardContent>
+          <Typography
+            variant="body2"
+            color="textSecondary"
+            component="p"
+            gutterBottom
+          >
+            {post.message}
+          </Typography>
+        </CardContent>
+      </ButtonBase>
       <CardActions className={classes.cardActions}>
         <Button
           size="small"
@@ -91,10 +89,10 @@ const Post = ({ post }) => {
         </Button>
         {(user?.result?.googleId === post?.creatorId ||
           user?.result?.id === post?.creatorId) && (
-          <Button size="small" color="primary" onClick={handleDeletePost}>
-            <DeleteIcon fontSize="small" />
-            Delete
-          </Button>
+          <OptionsButton
+            handleEditPost={handleEditPost}
+            handleDeletePost={handleDeletePost}
+          />
         )}
       </CardActions>
     </Card>

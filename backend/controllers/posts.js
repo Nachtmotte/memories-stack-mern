@@ -2,6 +2,16 @@ import mongoose from "mongoose";
 import Post from "../models/post.js";
 import config from "../utils/config.js";
 
+export const getPost = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const post = await Post.findById(id);
+    res.status(200).json(post);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};
+
 export const getPosts = async (req, res) => {
   const { page } = req.query;
   try {
@@ -14,14 +24,11 @@ export const getPosts = async (req, res) => {
       .limit(perPage)
       .skip(startIndex);
 
-    console.log(posts);
-    res
-      .status(200)
-      .json({
-        data: posts,
-        currentPage: Number(page),
-        numberOfPages: Math.ceil(total / perPage),
-      });
+    res.status(200).json({
+      data: posts,
+      currentPage: Number(page),
+      numberOfPages: Math.ceil(total / perPage),
+    });
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
@@ -34,9 +41,9 @@ export const getPostsBySearch = async (req, res) => {
     const posts = await Post.find({
       $or: [{ title }, { tags: { $in: tags.split(",") } }],
     });
-    console.log(posts);
     res.status(200).json(posts);
   } catch (error) {
+    console.log(error);
     res.status(404).json({ message: error.message });
   }
 };

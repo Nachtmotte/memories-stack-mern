@@ -11,6 +11,8 @@ axios.interceptors.request.use((req) => {
   return req;
 });
 
+const fetchPost = (id) => axios.get(`${url}/${id}`);
+
 const fetchPosts = (page) => axios.get(`${url}?page=${page}`);
 
 const fetchPostsBySearch = (searchQuery) =>
@@ -30,6 +32,7 @@ const deletePost = (id) => axios.delete(`${url}/${id}`);
 const likePost = (id) => axios.patch(`${url}/${id}/likePost`);
 
 const postsService = {
+  fetchPost,
   fetchPosts,
   createPost,
   updatePost,
