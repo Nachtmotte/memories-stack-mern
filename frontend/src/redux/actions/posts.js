@@ -4,16 +4,37 @@ import {
   CREATE,
   UPDATE,
   DELETE,
+  GET_ALL_SEARCH,
+  START_LOADING,
+  END_LOADING,
 } from "../../constants/postsActionTypes";
 
-export const getPosts = () => {
+export const getPosts = (page) => {
   return async (dispatch) => {
     try {
-      const { data } = await postsService.fetchPosts();
+      dispatch({ type: START_LOADING });
+      const { data } = await postsService.fetchPosts(page);
       dispatch({
         type: GET_ALL,
         payload: data,
       });
+      dispatch({ type: END_LOADING });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+export const getPostsBySearch = (searchQuery) => {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: START_LOADING });
+      const { data } = await postsService.fetchPostsBySearch(searchQuery);
+      dispatch({
+        type: GET_ALL_SEARCH,
+        payload: data,
+      });
+      dispatch({ type: END_LOADING });
     } catch (error) {
       console.log(error);
     }

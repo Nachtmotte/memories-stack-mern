@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Posts from "../Posts/Posts";
 import Form from "../Form/Form";
 import Paginate from "../Pagination/Pagination";
 import { useDispatch } from "react-redux";
-import { getPosts } from "../../redux/actions/posts";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   Container,
@@ -13,10 +12,11 @@ import {
   AppBar,
   TextField,
   Button,
-  Chip,
 } from "@material-ui/core";
 
 import useStyles from "./styles";
+import InputChip from "../InputChip/InputChip";
+import { getPostsBySearch } from "../../redux/actions/posts";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -30,31 +30,24 @@ function Home() {
   const page = query.get("page") || 1;
   const searchQuery = query.get("searchQuery");
   const [search, setSearch] = useState("");
-  const [tag, setTag] = useState("");
   const [tags, setTags] = useState([]);
 
-  useEffect(() => {
-    dispatch(getPosts());
-  }, [dispatch]);
+  const searchPost = () => {
+    if (search.trim() || tags) {
+      dispatch(getPostsBySearch({ search, tags: tags.join(",") }));
+      navigate(
+        `/posts/search?searchQuery=${search || "none"}&tags=${tags.join(",")}`
+      );
+    } else {
+      navigate("/");
+    }
+  };
 
   const handleKeyPress = (e) => {
     if (e.keyCode === 13) {
-      //search
+      searchPost();
     }
   };
-
-  const handleKeyDown = (e) => {
-    if (e.keyCode === 32) {
-      setTags([...tags, tag]);
-      setTag("");
-    }
-  };
-
-  const handleDeleteChip = (name) => {
-    setTags(tags.filter((tag) => tag !== name));
-  };
-
-  console.log(tags);
 
   return (
     <div>
@@ -85,38 +78,27 @@ function Home() {
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />
-                <TextField
-                  style={{ margin: "10px 0" }}
-                  fullWidth
-                  variant="outlined"
-                  label="Search Tags"
-                  onKeyDown={handleKeyDown}
-                  value={tag}
-                  onChange={(e) => setTag(e.target.value)}
-                  multiline
-                  InputProps={
-                    tags.length
-                      ? {
-                          startAdornment: (
-                            <div style={{ width: "100%" }}>
-                              {tags.map((item) => (
-                                <Chip
-                                  key={item}
-                                  label={item}
-                                  onDelete={() => handleDeleteChip(item)}
-                                />
-                              ))}
-                            </div>
-                          ),
-                        }
-                      : {}
-                  }
+                <InputChip
+                  chips={tags}
+                  setChips={setTags}
+                  fieldLabel={"Search Tags"}
+                  fieldStyle={{ margin: "10px 0" }}
                 />
+                <Button
+                  onClick={searchPost}
+                  className={classes.searchButton}
+                  color="primary"
+                  variant="contained"
+                >
+                  Search
+                </Button>
               </AppBar>
               <Form />
-              <Paper className={classes.pagination} elevation={6}>
-                <Paginate />
-              </Paper>
+              {!searchQuery && !tags.length && (
+                <Paper className={classes.pagination} elevation={6}>
+                  <Paginate page={page} />
+                </Paper>
+              )}
             </Grid>
           </Grid>
         </Container>

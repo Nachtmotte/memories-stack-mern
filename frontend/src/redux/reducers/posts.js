@@ -3,23 +3,48 @@ import {
   CREATE,
   UPDATE,
   DELETE,
+  GET_ALL_SEARCH,
+  START_LOADING,
+  END_LOADING,
 } from "../../constants/postsActionTypes";
-const initialState = [];
+const initialState = {
+  posts: [],
+  currentPage: 1,
+  numberOfPages: 1,
+  isLoading: false,
+};
 
-const reducer = (posts = initialState, action) => {
+const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case START_LOADING:
+      return { ...state, isLoading: true };
+    case END_LOADING:
+      return { ...state, isLoading: false };
     case GET_ALL:
-      return action.payload;
+      return {
+        ...state,
+        posts: action.payload.data,
+        currentPage: action.payload.currentPage,
+        numberOfPages: action.payload.numberOfPages,
+      };
+    case GET_ALL_SEARCH:
+      return { ...state, posts: action.payload };
     case CREATE:
-      return [...posts, action.payload];
+      return { ...state, posts: [...state.posts, action.payload] };
     case UPDATE:
-      return posts.map((post) =>
-        post.id === action.payload.id ? action.payload : post
-      );
+      return {
+        ...state,
+        posts: state.posts.map((post) =>
+          post.id === action.payload.id ? action.payload : post
+        ),
+      };
     case DELETE:
-      return posts.filter((post) => post.id !== action.payload);
+      return {
+        ...state,
+        posts: state.posts.filter((post) => post.id !== action.payload),
+      };
     default:
-      return posts;
+      return state;
   }
 };
 

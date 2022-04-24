@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import useStyles from "./styles";
 import { createPost, updatePost } from "../../redux/actions/posts";
 import { clearPostToEdit } from "../../redux/actions/postToEdit";
+import InputChip from "../InputChip/InputChip";
 
 const Form = () => {
   const dispatch = useDispatch();
@@ -15,24 +16,27 @@ const Form = () => {
   const emptyPost = {
     title: "",
     message: "",
-    tags: "",
     selectedFile: "",
   };
+  const [tags, setTags] = useState([]);
   const [postData, setPostData] = useState(emptyPost);
   const postToEdit = useSelector((state) => state.postToEdit);
 
   useEffect(() => {
     if (postToEdit) {
       setPostData(postToEdit);
+      setTags(postToEdit.tags);
     }
   }, [postToEdit]);
 
   const clearForm = () => {
+    setTags([]);
     setPostData(emptyPost);
     dispatch(clearPostToEdit());
   };
 
   const handleSubmit = (e) => {
+    postData.tags = tags;
     e.preventDefault();
     if (postToEdit) {
       dispatch(updatePost(postData.id, postData));
@@ -84,13 +88,11 @@ const Form = () => {
             setPostData({ ...postData, message: e.target.value })
           }
         />
-        <TextField
-          name="tags"
-          variant="outlined"
-          label="Tags"
-          fullWidth
-          value={postData.tags}
-          onChange={(e) => setPostData({ ...postData, tags: e.target.value })}
+        <InputChip
+          chips={tags}
+          setChips={setTags}
+          fieldLabel={"Tags"}
+          fieldStyle={{}}
         />
         <div className={classes.fileInput}>
           <FileBase

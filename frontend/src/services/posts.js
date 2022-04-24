@@ -11,7 +11,14 @@ axios.interceptors.request.use((req) => {
   return req;
 });
 
-const fetchPosts = () => axios.get(url);
+const fetchPosts = (page) => axios.get(`${url}?page=${page}`);
+
+const fetchPostsBySearch = (searchQuery) =>
+  axios.get(
+    `${url}/search?searchQuery=${searchQuery.search || "none"}&tags=${
+      searchQuery.tags
+    }`
+  );
 
 const createPost = (newPost) => axios.post(url, newPost);
 
@@ -28,6 +35,7 @@ const postsService = {
   updatePost,
   deletePost,
   likePost,
+  fetchPostsBySearch,
 };
 
 export default postsService;

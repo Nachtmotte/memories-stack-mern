@@ -1,9 +1,39 @@
 import mongoose from "mongoose";
 import Post from "../models/post.js";
+import config from "../utils/config.js";
 
 export const getPosts = async (req, res) => {
+  const { page } = req.query;
   try {
-    const posts = await Post.find();
+    const perPage = config.PER_PAGE;
+    const startIndex = (Number(page) - 1) * perPage;
+    const total = await Post.countDocuments({});
+
+    const posts = await Post.find()
+      .sort({ _id: -1 })
+      .limit(perPage)
+      .skip(startIndex);
+
+    console.log(posts);
+    res
+      .status(200)
+      .json({
+        data: posts,
+        currentPage: Number(page),
+        numberOfPages: Math.ceil(total / perPage),
+      });
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};
+
+export const getPostsBySearch = async (req, res) => {
+  const { searchQuery, tags } = req.query;
+  try {
+    const title = new RegExp(searchQuery, "i");
+    const posts = await Post.find({
+      $or: [{ title }, { tags: { $in: tags.split(",") } }],
+    });
     console.log(posts);
     res.status(200).json(posts);
   } catch (error) {
@@ -19,8 +49,6 @@ export const createPost = async (req, res) => {
     creatorId: req.userId,
     createAt: new Date().toISOString(),
   });
-
-  console.log(newPost.creatorId);
 
   try {
     await newPost.save();
