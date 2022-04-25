@@ -4,7 +4,7 @@ export default makeStyles((theme) => ({
   mainContainer: {
     display: "flex",
     alignItems: "center",
-    marginTop: "10px"
+    marginTop: "10px",
   },
   media: {
     borderRadius: "20px",
@@ -84,5 +84,14 @@ export default makeStyles((theme) => ({
     display: "-webkit-box",
     WebkitLineClamp: 3,
     WebkitBoxOrient: "vertical",
+  },
+  commentsOuterContainer: {
+    display: "flex",
+    justifyContent: "space-between",
+  },
+  commentsInnerContainer: {
+    height: "200px",
+    overflowY: "auto",
+    marginRight: "30px",
   },
 }));

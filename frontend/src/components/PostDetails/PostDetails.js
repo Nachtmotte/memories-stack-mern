@@ -12,12 +12,13 @@ import {
   Grid,
 } from "@material-ui/core/";
 import { useDispatch, useSelector } from "react-redux";
-import moment from "moment";
 import { useParams, useNavigate } from "react-router-dom";
-
 import { getPost, getPostsBySearch, likePost } from "../../redux/actions/posts";
-import useStyles from "./styles";
+import moment from "moment";
 import Likes from "../Posts/Post/Likes";
+import CommentSection from "./CommentSection";
+
+import useStyles from "./styles";
 
 const Post = () => {
   const { post, posts, isLoading } = useSelector((state) => state.posts);
@@ -93,9 +94,7 @@ const Post = () => {
             <Likes post={post} />
           </Button>
           <Divider style={{ margin: "20px 0" }} />
-          <Typography variant="body1">
-            <strong>Comments - coming soon!</strong>
-          </Typography>
+          <CommentSection post={post} />
           <Divider style={{ margin: "20px 0" }} />
         </div>
         <div className={classes.imageSection}>
