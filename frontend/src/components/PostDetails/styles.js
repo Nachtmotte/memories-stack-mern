@@ -77,4 +77,12 @@ export default makeStyles((theme) => ({
     display: "block",
     textAlign: "initial",
   },
+  limitMessage: {
+    minHeight: "60px",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    display: "-webkit-box",
+    WebkitLineClamp: 3,
+    WebkitBoxOrient: "vertical",
+  },
 }));

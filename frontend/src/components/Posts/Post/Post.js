@@ -69,6 +69,7 @@ const Post = ({ post }) => {
         </Typography>
         <CardContent>
           <Typography
+            className={classes.limitMessage}
             variant="body2"
             color="textSecondary"
             component="p"

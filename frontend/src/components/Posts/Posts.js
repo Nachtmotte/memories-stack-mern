@@ -1,19 +1,13 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Post from "./Post/Post";
 import { Grid, CircularProgress, Paper } from "@material-ui/core";
-import { useSelector, useDispatch } from "react-redux";
-import { getPosts } from "../../redux/actions/posts";
+import { useSelector } from "react-redux";
 
 import useStyles from "./styles";
 
 const Posts = () => {
-  const dispatch = useDispatch();
   const { posts, isLoading } = useSelector((state) => state.posts);
   const classes = useStyles();
-
-  useEffect(() => {
-    dispatch(getPosts());
-  }, [dispatch]);
 
   if (!posts.length && !isLoading) return "No posts";
 

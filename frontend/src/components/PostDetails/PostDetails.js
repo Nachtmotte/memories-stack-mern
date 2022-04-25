@@ -4,6 +4,7 @@ import {
   Typography,
   CircularProgress,
   Divider,
+  Button,
   ButtonBase,
   Card,
   CardMedia,
@@ -14,11 +15,13 @@ import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import { useParams, useNavigate } from "react-router-dom";
 
-import { getPost, getPostsBySearch } from "../../redux/actions/posts";
+import { getPost, getPostsBySearch, likePost } from "../../redux/actions/posts";
 import useStyles from "./styles";
+import Likes from "../Posts/Post/Likes";
 
 const Post = () => {
   const { post, posts, isLoading } = useSelector((state) => state.posts);
+  const user = useSelector((state) => state.auth.authData);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const classes = useStyles();
@@ -37,6 +40,14 @@ const Post = () => {
   }, [dispatch, post]);
 
   if (!post) return null;
+
+  const handleLikePost = () => {
+    dispatch(likePost(post.id));
+    const userId = user?.result?.id || user?.result?.googleId;
+    post.likes = post.likes.find((like) => like === userId)
+      ? post.likes.filter((like) => like !== userId)
+      : post.likes.concat(userId);
+  };
 
   const openPost = (_id) => navigate(`/posts/${_id}`);
 
@@ -68,10 +79,19 @@ const Post = () => {
           <Typography gutterBottom variant="body1" component="p">
             {post.message}
           </Typography>
-          <Typography variant="h6">Created by: {post.name}</Typography>
+          <Typography variant="h6">Created by: {post.username}</Typography>
           <Typography variant="body1">
             {moment(post.createdAt).fromNow()}
           </Typography>
+          <Button
+            size="small"
+            color="primary"
+            disabled={!user?.result}
+            onClick={handleLikePost}
+            style={{ marginTop: "10px" }}
+          >
+            <Likes post={post} />
+          </Button>
           <Divider style={{ margin: "20px 0" }} />
           <Typography variant="body1">
             <strong>Comments - coming soon!</strong>
@@ -141,6 +161,7 @@ const Post = () => {
                         </Typography>
                         <CardContent>
                           <Typography
+                            className={classes.limitMessage}
                             variant="body2"
                             color="textSecondary"
                             component="p"

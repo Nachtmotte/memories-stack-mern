@@ -13,12 +13,10 @@ app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 
+//app.use(express.static('build'))
+
 app.use("/api/posts", postRoutes);
 app.use("/api/users", userRoutes);
-
-app.get("/", (req, res) => {
-  res.send("APP IS RUNNING");
-});
 
 mongoose
   .connect(config.MONGODB_URI)
