@@ -1,26 +1,25 @@
-/* eslint-disable react/jsx-props-no-spreading */
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React from "react";
+import { useSelector } from "react-redux";
 import { Pagination, PaginationItem } from "@material-ui/lab";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import useStyles from "./styles";
-import { getPosts } from "../../redux/actions/posts";
 
-const Paginate = ({ page }) => {
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
+
+const Paginate = ({ page, setPage }) => {
+  const query = useQuery();
+  const tags = query.get("tags");
+  const searchQuery = query.get("searchQuery");
   const { numberOfPages } = useSelector((state) => state.posts);
-  const dispatch = useDispatch();
 
   const classes = useStyles();
 
-  useEffect(() => {
-    if (page) {
-      dispatch(getPosts(page));
-    }
-  }, [dispatch, page]);
-
   return (
     <Pagination
+      onChange={(event, value) => setPage(value)}
       classes={{ ul: classes.ul }}
       count={numberOfPages}
       page={Number(page) || 1}
@@ -30,7 +29,9 @@ const Paginate = ({ page }) => {
         <PaginationItem
           {...item}
           component={Link}
-          to={`/posts?page=${item.page}`}
+          to={`/posts?
+          ${searchQuery ? "searchQuery=".concat(searchQuery) : ""}
+          ${tags ? "tags=".concat(tags) : ""}&page=${item.page}`}
         />
       )}
     />

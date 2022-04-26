@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Posts from "../Posts/Posts";
 import Form from "../Form/Form";
 import Paginate from "../Pagination/Pagination";
@@ -27,25 +27,30 @@ function Home() {
   const dispatch = useDispatch();
   const query = useQuery();
   const navigate = useNavigate();
-  const page = query.get("page") || 1;
-  const searchQuery = query.get("searchQuery");
+  const [page, setPage] = useState(query.get("page") || 1);
   const [search, setSearch] = useState("");
   const [tags, setTags] = useState([]);
+  const buttonEnabled = search.trim() || tags.length;
 
-  const searchPost = () => {
-    if (search.trim() || tags) {
-      dispatch(getPostsBySearch({ search, tags: tags.join(",") }));
-      navigate(
-        `/posts/search?searchQuery=${search || "none"}&tags=${tags.join(",")}`
-      );
-    } else {
-      navigate("/");
-    }
+  useEffect(() => {
+    searchPosts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, page]);
+
+  const searchPosts = () => {
+    dispatch(getPostsBySearch({ search, tags: tags.join(","), page }));
+    navigate(
+      `/posts?${search ? "searchQuery=".concat(search, "&") : ""}${
+        tags.length ? "tags=".concat(tags.join(","), "&") : ""
+      }page=${page}`
+    );
   };
 
-  const handleKeyPress = (e) => {
-    if (e.keyCode === 13) {
-      searchPost();
+  const handleSearch = () => {
+    if (page !== 1) {
+      setPage(1);
+    } else {
+      searchPosts();
     }
   };
 
@@ -73,7 +78,6 @@ function Home() {
                   name="search"
                   variant="outlined"
                   label="Search Memories"
-                  onKeyDown={handleKeyPress}
                   fullWidth
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
@@ -85,20 +89,19 @@ function Home() {
                   fieldStyle={{ margin: "10px 0" }}
                 />
                 <Button
-                  onClick={searchPost}
+                  onClick={handleSearch}
                   className={classes.searchButton}
                   color="primary"
                   variant="contained"
+                  disabled={!buttonEnabled}
                 >
                   Search
                 </Button>
               </AppBar>
               <Form />
-              {!searchQuery && !tags.length && (
-                <Paper className={classes.pagination} elevation={6}>
-                  <Paginate page={page} />
-                </Paper>
-              )}
+              <Paper className={classes.pagination} elevation={6}>
+                <Paginate page={page} setPage={setPage} />
+              </Paper>
             </Grid>
           </Grid>
         </Container>

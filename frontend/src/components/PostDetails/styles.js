@@ -88,8 +88,16 @@ export default makeStyles((theme) => ({
   commentsOuterContainer: {
     display: "flex",
     justifyContent: "space-between",
+    flexDirection:"row",
+    [theme.breakpoints.only("xs")]: {
+      flexDirection: "column",
+    },
+    [theme.breakpoints.only("md")]: {
+      flexDirection: "column",
+    },
   },
   commentsInnerContainer: {
+    minWidth: "200px",
     height: "200px",
     overflowY: "auto",
     marginRight: "30px",

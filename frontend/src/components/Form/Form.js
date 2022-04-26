@@ -21,6 +21,8 @@ const Form = () => {
   const [tags, setTags] = useState([]);
   const [postData, setPostData] = useState(emptyPost);
   const postToEdit = useSelector((state) => state.postToEdit);
+  const buttonEnabled =
+    postData.title && postData.message && postData.selectedFile;
 
   useEffect(() => {
     if (postToEdit) {
@@ -112,6 +114,7 @@ const Form = () => {
           size="large"
           type="submit"
           fullWidth
+          disabled={!buttonEnabled}
         >
           {!postToEdit ? "Send" : "Update"}
         </Button>
@@ -122,6 +125,7 @@ const Form = () => {
           type="reset"
           onClick={clearForm}
           fullWidth
+          disabled={!buttonEnabled}
         >
           Clear
         </Button>
