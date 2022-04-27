@@ -13,6 +13,10 @@ export default makeStyles((theme) => ({
     display: "flex",
     flexWrap: "wrap",
     justifyContent: "center",
+    "& .MuiAutocomplete-root": {
+      display: "flex",
+      width: "100%",
+    },
   },
   fileInput: {
     width: "97%",

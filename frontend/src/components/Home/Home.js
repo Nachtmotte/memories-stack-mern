@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Posts from "../Posts/Posts";
 import Form from "../Form/Form";
 import Paginate from "../Pagination/Pagination";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   Container,
@@ -13,6 +13,7 @@ import {
   TextField,
   Button,
 } from "@material-ui/core";
+import SearchIcon from "@material-ui/icons/Search";
 
 import useStyles from "./styles";
 import InputChip from "../InputChip/InputChip";
@@ -30,7 +31,9 @@ function Home() {
   const [page, setPage] = useState(query.get("page") || 1);
   const [search, setSearch] = useState("");
   const [tags, setTags] = useState([]);
+  const user = useSelector((state) => state.auth.authData);
   const buttonEnabled = search.trim() || tags.length;
+  const [openDialog, setOpenDialog] = useState(false);
 
   useEffect(() => {
     searchPosts();
@@ -54,10 +57,53 @@ function Home() {
     }
   };
 
+  const handleOpen = () => {
+    setOpenDialog(true);
+  };
+
   return (
     <div>
       <Grow in>
         <Container maxWidth="xl">
+          <Grid container>
+            <AppBar
+              className={classes.appBarSearch}
+              position="static"
+              color="inherit"
+            >
+              <TextField
+                className={classes.searchField}
+                name="search"
+                variant="outlined"
+                label="Search Memories"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+              <InputChip
+                chips={tags}
+                setChips={setTags}
+                fieldLabel={"Search Tags"}
+              />
+              <Button
+                onClick={handleSearch}
+                className={classes.searchButton}
+                color="primary"
+                variant="contained"
+                disabled={!buttonEnabled}
+              >
+                <SearchIcon />
+              </Button>
+              <Button
+                className={classes.newButton}
+                onClick={handleOpen}
+                color="primary"
+                variant="contained"
+                disabled={!user}
+              >
+                New Memory
+              </Button>
+            </AppBar>
+          </Grid>
           <Grid
             container
             justifyContent="space-between"
@@ -65,45 +111,18 @@ function Home() {
             spacing={3}
             className={classes.gridContainer}
           >
-            <Grid item xs={12} sm={6} md={9}>
-              <Posts />
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <AppBar
-                className={classes.appBarSearch}
-                position="static"
-                color="inherit"
-              >
-                <TextField
-                  name="search"
-                  variant="outlined"
-                  label="Search Memories"
-                  fullWidth
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-                <InputChip
-                  chips={tags}
-                  setChips={setTags}
-                  fieldLabel={"Search Tags"}
-                  fieldStyle={{ margin: "10px 0" }}
-                />
-                <Button
-                  onClick={handleSearch}
-                  className={classes.searchButton}
-                  color="primary"
-                  variant="contained"
-                  disabled={!buttonEnabled}
-                >
-                  Search
-                </Button>
-              </AppBar>
-              <Form />
-              <Paper className={classes.pagination} elevation={6}>
-                <Paginate page={page} setPage={setPage} />
-              </Paper>
-            </Grid>
+            <Posts />
           </Grid>
+          <Grid container justifyContent="center">
+            <Paper className={classes.pagination} elevation={6}>
+              <Paginate page={page} setPage={setPage} />
+            </Paper>
+          </Grid>
+          <Form
+            open={openDialog}
+            setOpen={setOpenDialog}
+            handleOpen={handleOpen}
+          />
         </Container>
       </Grow>
     </div>

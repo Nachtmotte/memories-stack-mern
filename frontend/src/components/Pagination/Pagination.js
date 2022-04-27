@@ -29,9 +29,9 @@ const Paginate = ({ page, setPage }) => {
         <PaginationItem
           {...item}
           component={Link}
-          to={`/posts?
-          ${searchQuery ? "searchQuery=".concat(searchQuery) : ""}
-          ${tags ? "tags=".concat(tags) : ""}&page=${item.page}`}
+          to={`/posts?${searchQuery ? "searchQuery=".concat(searchQuery) : ""}${
+            tags ? "tags=".concat(tags) : ""
+          }&page=${item.page}`}
         />
       )}
     />

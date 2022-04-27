@@ -2,15 +2,32 @@ import { makeStyles } from "@material-ui/core/styles";
 
 export default makeStyles((theme) => ({
   appBarSearch: {
-    borderRadius: 4,
-    marginBottom: "1rem",
+    "& .MuiAutocomplete-root": {
+      display: "flex",
+      width: "300px",
+      [theme.breakpoints.down("sm")]: {
+        width: "96%",
+      },
+    },
+    "& #chip-textfield": {
+      margin: "10px 0",
+    },
+    padding: "10px 0",
+    borderRadius: 10,
+    marginBottom: "2rem",
     display: "flex",
-    padding: "16px",
+    flexDirection: "row",
+    alignItems: "center",
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+    },
   },
   pagination: {
-    borderRadius: 4,
-    marginTop: "1rem",
+    borderRadius: 10,
+    marginTop: "2rem",
     padding: "16px",
+    width: "100%",
+    maxWidth: "400px",
   },
   gridContainer: {
     [theme.breakpoints.down("xs")]: {
@@ -19,5 +36,29 @@ export default makeStyles((theme) => ({
   },
   startAdornment: {
     display: "flex",
+  },
+  searchField: {
+    margin: "0 4px 0 10px",
+    width: "300px",
+    [theme.breakpoints.down("sm")]: {
+      margin: "8px",
+      width: "96%",
+    },
+  },
+  searchButton: {
+    [theme.breakpoints.up("md")]: {
+      margin: "0 auto 0 4px",
+      height: "56px",
+    },
+    [theme.breakpoints.down("sm")]: {
+      margin: "10px 0",
+      width: "96%",
+    },
+  },
+  newButton: {
+    margin: "0 20px",
+    [theme.breakpoints.down("sm")]: {
+      width: "96%",
+    },
   },
 }));
