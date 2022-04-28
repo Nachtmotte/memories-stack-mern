@@ -1,8 +1,8 @@
 import postsService from "../../services/posts";
 import {
   GET_ALL,
-  /*CREATE,
-  DELETE,*/
+  CREATE,
+  DELETE,
   UPDATE,
   GET_ALL_SEARCH,
   START_LOADING,
@@ -61,12 +61,11 @@ export const getPostsBySearch = (searchQuery) => {
 export const createPost = (post) => {
   return async (dispatch) => {
     try {
-      /*const { data } =*/ await postsService.createPost(post);
-      dispatch(getPostsBySearch({ search: "", tags: "", page: 1 }));
-      /*dispatch({
+      const { data } = await postsService.createPost(post);
+      dispatch({
         type: CREATE,
         payload: data,
-      });*/
+      });
     } catch (error) {
       console.log(error);
     }
@@ -119,11 +118,10 @@ export const deletePost = (id) => {
   return async (dispatch) => {
     try {
       await postsService.deletePost(id);
-      dispatch(getPostsBySearch({ search: "", tags: "", page: 1 }));
-      /*dispatch({
+      dispatch({
         type: DELETE,
         payload: id,
-      });*/
+      });
     } catch (error) {
       console.log(error);
     }

@@ -1,7 +1,7 @@
 import {
   GET_ALL,
-  /*CREATE,
-  DELETE,*/
+  CREATE,
+  DELETE,
   UPDATE,
   GET_ALL_SEARCH,
   START_LOADING,
@@ -38,8 +38,8 @@ const reducer = (state = initialState, action) => {
         currentPage: action.payload.currentPage,
         numberOfPages: action.payload.numberOfPages,
       };
-    /*case CREATE:
-      return { ...state, posts: [...state.posts, action.payload] };*/
+    case CREATE:
+      return { ...state, posts: [...state.posts, action.payload] };
     case UPDATE:
       return {
         ...state,
@@ -47,11 +47,11 @@ const reducer = (state = initialState, action) => {
           post.id === action.payload.id ? action.payload : post
         ),
       };
-    /*case DELETE:
+    case DELETE:
       return {
         ...state,
         posts: state.posts.filter((post) => post.id !== action.payload),
-      };*/
+      };
     default:
       return state;
   }

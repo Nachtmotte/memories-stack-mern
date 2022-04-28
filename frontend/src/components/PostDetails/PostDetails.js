@@ -20,13 +20,14 @@ import CommentSection from "./CommentSection";
 
 import useStyles from "./styles";
 
-const Post = () => {
+const PostDetails = () => {
   const { post, posts, isLoading } = useSelector((state) => state.posts);
   const user = useSelector((state) => state.auth.authData);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const classes = useStyles();
   const { id } = useParams();
+  const userId = user?.result?.googleId || user?.result?.id;
 
   useEffect(() => {
     dispatch(getPost(id));
@@ -43,11 +44,10 @@ const Post = () => {
   if (!post) return null;
 
   const handleLikePost = () => {
-    dispatch(likePost(post.id));
-    const userId = user?.result?.id || user?.result?.googleId;
     post.likes = post.likes.find((like) => like === userId)
       ? post.likes.filter((like) => like !== userId)
       : post.likes.concat(userId);
+    dispatch(likePost(post.id));
   };
 
   const openPost = (_id) => navigate(`/posts/${_id}`);
@@ -91,7 +91,7 @@ const Post = () => {
             onClick={handleLikePost}
             style={{ marginTop: "10px" }}
           >
-            <Likes post={post} />
+            <Likes userId={userId} likes={post?.likes} />
           </Button>
           <Divider style={{ margin: "20px 0" }} />
           <CommentSection post={post} />
@@ -182,4 +182,4 @@ const Post = () => {
   );
 };
 
-export default Post;
+export default PostDetails;
