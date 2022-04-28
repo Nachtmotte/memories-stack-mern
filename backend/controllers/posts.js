@@ -69,10 +69,13 @@ export const getPostsBySearch = async (req, res) => {
 export const createPost = async (req, res) => {
   const post = req.body;
 
+  var tzoffset = new Date().getTimezoneOffset() * 60000;
+  var localISOTime = new Date(Date.now() - tzoffset).toISOString().slice(0, -1);
+
   const newPost = new Post({
     ...post,
     creatorId: req.userId,
-    createAt: new Date().toISOString(),
+    createAt: localISOTime,
   });
 
   try {

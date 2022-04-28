@@ -17,7 +17,7 @@ export default makeStyles((theme) => ({
     width: "100%",
     [theme.breakpoints.down("sm")]: {
       flexWrap: "wrap",
-      flexDirection: "column",
+      flexDirection: "column-reverse",
     },
   },
   section: {
