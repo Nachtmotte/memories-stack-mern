@@ -1,8 +1,8 @@
 import {
   GET_ALL,
   CREATE,
-  UPDATE,
   DELETE,
+  UPDATE,
   GET_ALL_SEARCH,
   START_LOADING,
   END_LOADING,
@@ -32,7 +32,12 @@ const reducer = (state = initialState, action) => {
     case GET_POST:
       return { ...state, post: action.payload };
     case GET_ALL_SEARCH:
-      return { ...state, posts: action.payload };
+      return {
+        ...state,
+        posts: action.payload.data,
+        currentPage: action.payload.currentPage,
+        numberOfPages: action.payload.numberOfPages,
+      };
     case CREATE:
       return { ...state, posts: [...state.posts, action.payload] };
     case UPDATE:

@@ -13,7 +13,7 @@ export const getPost = async (req, res) => {
 };
 
 export const getPosts = async (req, res) => {
-  const { page } = req.query;
+  const { page } = req.query || 1;
   try {
     const perPage = config.PER_PAGE;
     const startIndex = (Number(page) - 1) * perPage;
@@ -35,13 +35,31 @@ export const getPosts = async (req, res) => {
 };
 
 export const getPostsBySearch = async (req, res) => {
-  const { searchQuery, tags } = req.query;
+  const { page } = req.query || 1;
+  const { tags } = req.query;
+  let { searchQuery } = req.query;
+
+  if (searchQuery === "" && tags !== "") searchQuery = "none";
   try {
     const title = new RegExp(searchQuery, "i");
-    const posts = await Post.find({
+
+    const perPage = config.PER_PAGE;
+    const startIndex = (Number(page) - 1) * perPage;
+    const total = await Post.countDocuments({
       $or: [{ title }, { tags: { $in: tags.split(",") } }],
     });
-    res.status(200).json(posts);
+    const posts = await Post.find({
+      $or: [{ title }, { tags: { $in: tags.split(",") } }],
+    })
+      .sort({ _id: -1 })
+      .limit(perPage)
+      .skip(startIndex);
+
+    res.status(200).json({
+      data: posts,
+      currentPage: Number(page),
+      numberOfPages: Math.ceil(total / perPage),
+    });
   } catch (error) {
     console.log(error);
     res.status(404).json({ message: error.message });
@@ -51,10 +69,13 @@ export const getPostsBySearch = async (req, res) => {
 export const createPost = async (req, res) => {
   const post = req.body;
 
+  var tzoffset = new Date().getTimezoneOffset() * 60000;
+  var localISOTime = new Date(Date.now() - tzoffset).toISOString().slice(0, -1);
+
   const newPost = new Post({
     ...post,
     creatorId: req.userId,
-    createAt: new Date().toISOString(),
+    createAt: localISOTime,
   });
 
   try {
@@ -121,4 +142,24 @@ export const likePost = async (req, res) => {
     new: true,
   });
   res.status(200).json(updatedPost);
+};
+
+export const commentPost = async (req, res) => {
+  const { id } = req.params;
+  const { value } = req.body;
+
+  if (!req.userId) {
+    return res.json({ message: "Unauthenticated" });
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(id))
+    return res.status(404).send(`No post with id: ${id}`);
+
+  const post = await Post.findById(id);
+
+  post.comments.push(value);
+
+  const updatedPost = await Post.findByIdAndUpdate(id, post, { new: true });
+
+  res.json(updatedPost);
 };

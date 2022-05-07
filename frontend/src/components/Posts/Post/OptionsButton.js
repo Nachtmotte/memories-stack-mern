@@ -5,16 +5,7 @@ import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 
-import { makeStyles } from "@material-ui/core";
-
-export const useStyles = makeStyles((theme) => ({
-  menuPaper: {
-    color: "#3f51b5",
-  },
-}));
-
 function OptionsButton({ handleEditPost, handleDeletePost }) {
-  const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
@@ -45,13 +36,12 @@ function OptionsButton({ handleEditPost, handleDeletePost }) {
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
-        classes={{ paper: classes.menuPaper }}
       >
-        <MenuItem onClick={handlePressEdit}>
+        <MenuItem onClick={handlePressEdit} style={{color: "#3F51B5"}}>
           <EditIcon fontSize="small" />
           &nbsp;Edit
         </MenuItem>
-        <MenuItem onClick={handlePressDelete}>
+        <MenuItem onClick={handlePressDelete} style={{color: "#E91E63"}}>
           <DeleteIcon fontSize="small" />
           &nbsp;Delete
         </MenuItem>

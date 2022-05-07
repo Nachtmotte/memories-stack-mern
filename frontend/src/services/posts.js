@@ -17,9 +17,7 @@ const fetchPosts = (page) => axios.get(`${url}?page=${page}`);
 
 const fetchPostsBySearch = (searchQuery) =>
   axios.get(
-    `${url}/search?searchQuery=${searchQuery.search || "none"}&tags=${
-      searchQuery.tags
-    }`
+    `${url}/search?searchQuery=${searchQuery.search}&tags=${searchQuery.tags}&page=${searchQuery.page}`
   );
 
 const createPost = (newPost) => axios.post(url, newPost);
@@ -31,6 +29,9 @@ const deletePost = (id) => axios.delete(`${url}/${id}`);
 
 const likePost = (id) => axios.patch(`${url}/${id}/likePost`);
 
+const commentPost = (value, id) =>
+  axios.post(`${url}/${id}/commentPost`, { value });
+
 const postsService = {
   fetchPost,
   fetchPosts,
@@ -39,6 +40,7 @@ const postsService = {
   deletePost,
   likePost,
   fetchPostsBySearch,
+  commentPost,
 };
 
 export default postsService;

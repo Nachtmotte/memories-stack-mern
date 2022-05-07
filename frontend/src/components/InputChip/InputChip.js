@@ -2,7 +2,11 @@ import React from "react";
 import { Chip, TextField } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 
-function InputChip({ chips, setChips, fieldLabel, fieldStyle }) {
+function InputChip({
+  chips,
+  setChips,
+  fieldLabel,
+}) {
   const handleRemoveChip = (value) => {
     setChips(chips.filter((chip) => chip !== value));
   };
@@ -24,13 +28,12 @@ function InputChip({ chips, setChips, fieldLabel, fieldStyle }) {
 
   return (
     <Autocomplete
-      style={{ display: "flex", width: "100%" }}
+      id="chip-autocomplete"
       multiple
       value={chips}
       onChange={(e) =>
         e.target.value ? setChips([...chips, e.target.value]) : setChips([])
       }
-      id="chips-filled"
       options={[]}
       freeSolo
       renderTags={(values) => {
@@ -48,11 +51,10 @@ function InputChip({ chips, setChips, fieldLabel, fieldStyle }) {
         params.inputProps.onKeyDown = handleKeyDown;
         return (
           <TextField
-            style={fieldStyle}
+            id="chip-textfield"
             {...params}
             variant="outlined"
             label={fieldLabel}
-            fullWidth
           />
         );
       }}

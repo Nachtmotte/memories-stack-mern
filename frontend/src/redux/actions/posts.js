@@ -2,8 +2,8 @@ import postsService from "../../services/posts";
 import {
   GET_ALL,
   CREATE,
-  UPDATE,
   DELETE,
+  UPDATE,
   GET_ALL_SEARCH,
   START_LOADING,
   END_LOADING,
@@ -90,6 +90,20 @@ export const likePost = (id) => {
   return async (dispatch) => {
     try {
       const { data } = await postsService.likePost(id);
+      dispatch({
+        type: UPDATE,
+        payload: data,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+export const commentPost = (value, id) => {
+  return async (dispatch) => {
+    try {
+      const { data } = await postsService.commentPost(value, id);
       dispatch({
         type: UPDATE,
         payload: data,
